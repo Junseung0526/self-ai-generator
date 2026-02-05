@@ -76,7 +76,7 @@ export default function App() {
               </div>
               <h1 className="text-xl font-black tracking-tighter text-gray-900 italic">MY-SELF.AI</h1>
             </div>
-            
+
             <div className="flex-1 flex flex-col gap-4">
               <div className="flex justify-between items-end px-1">
                 <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">User Description</label>
@@ -89,8 +89,8 @@ export default function App() {
                 onChange={(e) => setUserInfo(e.target.value)}
               />
             </div>
-            
-            <button 
+
+            <button
               onClick={handleGenerate}
               disabled={isLoading}
               className="mt-8 flex items-center justify-center gap-3 bg-indigo-600 text-white py-5 rounded-[1.8rem] font-bold text-lg disabled:bg-gray-200 transition-all hover:bg-indigo-700 active:scale-95 shadow-xl shadow-indigo-100"
@@ -102,7 +102,7 @@ export default function App() {
 
           {/* 2. 메인 화면 (에디터 + 미리보기) */}
           <div className="flex-1 h-full relative">
-            <button 
+            <button
               onClick={() => setIsFullPreview(true)}
               className="absolute top-8 right-8 z-10 bg-white border border-gray-100 px-6 py-3.5 rounded-2xl shadow-2xl hover:bg-gray-50 transition-all flex items-center gap-3 font-bold text-gray-700 active:scale-95"
             >
@@ -110,7 +110,7 @@ export default function App() {
               전체화면 보기
             </button>
 
-            <Sandpack 
+            <Sandpack
               template="react"
               files={{ "/App.js": generatedCode }}
               options={{
@@ -129,7 +129,7 @@ export default function App() {
           {isFullPreview && (
             <div className="fixed inset-0 z-[100] bg-white flex flex-col animate-in fade-in zoom-in duration-300">
               <div className="flex-1 w-full h-full bg-white overflow-hidden relative"> {/* Added relative here */}
-                <Sandpack 
+                <Sandpack
                   template="react"
                   files={{ "/App.js": generatedCode }}
                   layout="preview" // Use the built-in preview-only layout
@@ -137,10 +137,12 @@ export default function App() {
                     dependencies: { "lucide-react": "latest" }
                   }}
                   options={{
-                    editorHeight: '100vh'
+                    externalResources: ["https://cdn.tailwindcss.com"],
+                    editorHeight: "100vh",
+                    showEditor: false,
+                    showNavigator: false
                   }}
-                />
-                <button 
+                />                <button
                   onClick={() => setIsFullPreview(false)}
                   className="absolute top-4 right-4 z-10 flex items-center gap-2 px-6 py-2 bg-indigo-600 text-white rounded-2xl hover:bg-red-500 transition-all shadow-lg active:scale-95"
                 >
