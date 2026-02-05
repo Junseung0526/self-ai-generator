@@ -128,47 +128,25 @@ export default function App() {
           {/* 3. 전체보기 모달 (결과물만 꽉 차게 렌더링) */}
           {isFullPreview && (
             <div className="fixed inset-0 z-[100] bg-white flex flex-col animate-in fade-in zoom-in duration-300">
-              {/* 상단 윈도우 컨트롤 바 */}
-              <div className="h-14 border-b border-gray-100 flex items-center justify-between px-6 bg-white shadow-sm">
-                <div className="flex items-center gap-6">
-                  <div className="flex gap-2 mr-4">
-                    <div className="w-3.5 h-3.5 rounded-full bg-red-400" />
-                    <div className="w-3.5 h-3.5 rounded-full bg-yellow-400" />
-                    <div className="w-3.5 h-3.5 rounded-full bg-green-400" />
-                  </div>
-                  <div className="hidden sm:flex items-center gap-2 px-4 py-1.5 bg-gray-50 border rounded-xl text-[11px] text-gray-400 font-bold uppercase tracking-tighter">
-                    <Monitor size={14} />
-                    Preview: localhost:3000
-                  </div>
-                </div>
-                
+              <div className="flex-1 w-full h-full bg-white overflow-hidden relative"> {/* Added relative here */}
+                <Sandpack 
+                  template="react"
+                  files={{ "/App.js": generatedCode }}
+                  layout="preview" // Use the built-in preview-only layout
+                  customSetup={{
+                    dependencies: { "lucide-react": "latest" }
+                  }}
+                  options={{
+                    editorHeight: '100vh'
+                  }}
+                />
                 <button 
                   onClick={() => setIsFullPreview(false)}
-                  className="flex items-center gap-2 px-6 py-2 bg-indigo-600 text-white rounded-2xl hover:bg-red-500 transition-all shadow-lg active:scale-95"
+                  className="absolute top-4 right-4 z-10 flex items-center gap-2 px-6 py-2 bg-indigo-600 text-white rounded-2xl hover:bg-red-500 transition-all shadow-lg active:scale-95"
                 >
                   <span className="text-xs font-black tracking-widest">닫기</span>
                   <X size={20} />
                 </button>
-              </div>
-
-              <div className="flex-1 w-full h-full bg-white overflow-hidden">
-                <Sandpack 
-                  template="react"
-                  files={{ "/App.js": generatedCode }}
-                  options={{
-                    externalResources: ["https://cdn.tailwindcss.com"],
-                    showNavigator: false,
-                    showTabs: false,
-                    editorHeight: "calc(100vh - 56px)", 
-                  }}
-                  customSetup={{
-                    dependencies: { "lucide-react": "latest" }
-                  }}
-                  // @ts-ignore: Sandpack types might miss 'components' in some versions, but it's valid for hiding Editor
-                  components={{
-                    Editor: () => null 
-                  }}
-                />
               </div>
             </div>
           )}
