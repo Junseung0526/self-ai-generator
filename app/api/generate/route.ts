@@ -1,36 +1,43 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
-
 export async function POST(req: Request) {
-  const { userInfo, style } = await req.json();
-
-  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-
-  const prompt = `
-    너는 세계 최고의 UI/UX 디자이너이자 React 개발자야.
-    사용자 정보: ${userInfo}
-    스타일 선호: ${style}
-
-    위 정보를 바탕으로 한 페이지짜리 세련된 '자기소개 웹사이트' 코드를 작성해줘.
-    [조건]
-    1. React와 Tailwind CSS만 사용할 것. (CDN 방식이 아닌 표준 JSX 문법)
-    2. lucide-react 아이콘을 적절히 사용할 것.
-    3. 코드 외의 설명(예: "알겠습니다", "여기 코드가 있습니다")은 절대 하지 말고 오직 유효한 JSX 코드만 출력할 것.
-    4. 코드 시작과 끝에 \`\`\`jsx 같은 마크다운 기호를 붙이지 말고 순수 텍스트로만 코드를 줄 것.
-    5. 전체 컴포넌트 이름은 'App'으로 통일하고 export default를 포함할 것.
-  `;
-
   try {
+    const { userInfo } = await req.json();
+    const apiKey = process.env.GEMINI_API_KEY;
+
+    if (!apiKey) return new Response(JSON.stringify({ error: "키 없음" }), { status: 500 });
+
+    const genAI = new GoogleGenerativeAI(apiKey);
+    const model = genAI.getGenerativeModel({ 
+      model: "gemini-2.5-flash", 
+    }, { apiVersion: 'v1' });
+
+    const prompt = `
+      사용자 정보: ${userInfo}
+      위 정보를 바탕으로 한 페이지짜리 자기소개 React 웹사이트를 작성해줘.
+      
+      [중요 지침]
+      1. 모든 컴포넌트(ProjectCard 등)를 하나의 파일 안에 작성해. 외부 임포트 없이 이 파일 하나만으로 실행되어야 해.
+      2. 반드시 'export default function App()'이 포함되어야 해.
+      3. 오직 '순수 코드'만 응답해. 설명, 인사말, 마크다운(\`\`\`)은 절대 포함하지 마.
+      4. lucide-react 아이콘을 사용한다면 반드시 상단에 import 문을 포함해.
+    `;
+
     const result = await model.generateContent(prompt);
     const response = await result.response;
-    let code = response.text();
+    let text = response.text();
 
-    // 혹시라도 마크다운 기호가 섞여 나올 경우를 대비한 정제
-    code = code.replace(/```jsx|```javascript|```/g, "").trim();
+    // 로직: 설명이 섞여있을 경우를 대비해 첫 번째 import나 function 키워드부터 끝까지만 추출
+    const startIndex = text.search(/import|function|export/);
+    let finalCode = startIndex !== -1 ? text.slice(startIndex) : text;
+    
+    // 마크다운 잔재 제거
+    finalCode = finalCode.replace(/```jsx|```javascript|```/g, "").trim();
 
-    return new Response(JSON.stringify({ code }));
-  } catch (error) {
-    return new Response(JSON.stringify({ error: "Gemini API 오류 발생" }), { status: 500 });
+    return new Response(JSON.stringify({ code: finalCode }), {
+      headers: { 'Content-Type': 'application/json' },
+    });
+  } catch (error: any) {
+    return new Response(JSON.stringify({ error: error.message }), { status: 500 });
   }
 }
