@@ -73,8 +73,8 @@ export default function App() {
             <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">User Description</label>
             <span className="text-[10px] text-green-500 font-bold">● AI ONLINE</span>
           </div>
-          <textarea 
-            className="flex-1 w-full p-6 border-2 border-gray-50 rounded-[2.5rem] bg-gray-50 outline-none focus:border-indigo-500 focus:bg-white transition-all resize-none text-lg leading-relaxed shadow-inner"
+          <textarea
+            className="flex-1 w-full p-6 border-2 border-gray-50 rounded-[2.5rem] bg-gray-50 outline-none focus:border-indigo-500 focus:bg-white transition-all resize-none text-lg leading-relaxed shadow-inner text-gray-900 placeholder:text-gray-400"
             placeholder="이름은 김하나, 3년차 프론트엔드 개발자야. 깔끔한 다크모드 포트폴리오를 만들어줘."
             value={userInfo}
             onChange={(e) => setUserInfo(e.target.value)}
