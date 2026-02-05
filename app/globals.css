@@ -20,7 +20,76 @@
 }
 
 body {
-  background: var(--background);
+  background: radial-gradient(circle, #e0f2fe 0%, #ffffff 100%);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes splash-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 20s linear infinite;
+}
+
+.animate-float {
+  animation: float 8s ease-in-out infinite;
+}
+
+.splash-intro-1 { animation: splash-fade-in 0.5s forwards 0.2s; }
+.splash-intro-2 { animation: splash-fade-in 0.5s forwards 0.4s; }
+.splash-intro-3 { animation: splash-fade-in 0.5s forwards 0.6s; }
+.splash-intro-4 { animation: splash-fade-in 0.5s forwards 0.8s; }
+.splash-intro-5 { animation: splash-fade-in 0.5s forwards 1.0s; }
+.splash-intro-scroll { animation: splash-fade-in 0.5s forwards 1.2s; }
+
+
+@keyframes bounce-subtle {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.animate-bounce-subtle {
+  animation: bounce-subtle 2s ease-in-out infinite;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
 }
